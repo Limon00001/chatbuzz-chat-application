@@ -1,0 +1,37 @@
+/*
+  Author: Monayem Hossain Limon
+  GitHub: https://github.com/Limon00001
+  Date: 17 May, 2025
+  @copyright 2025 monayem_hossain_limon
+*/
+
+/* Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+/* Tailwind */
+@import 'tailwindcss';
+
+/* Global CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* html {
+  scroll-padding-top: 5rem;
+} */
+
+@layer base {
+  body {
+    @apply bg-[url('/bg.jpeg')] bg-cover bg-no-repeat flex justify-center items-center h-screen text-white;
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply w-[90vw] h-[90vh] bg-black/60 border border-white/10 rounded-xl backdrop-blur-md;
+  }
+}
