@@ -23,9 +23,9 @@ const ChatHeader = () => {
         </div>
       </div>
       <div className="flex items-center gap-5">
-        <img src="./phone.png" alt="" className="h-5 w-5" />
-        <img src="./video.png" alt="" className="h-5 w-5" />
-        <img src="./info.png" alt="" className="h-5 w-5" />
+        <img src="./phone.png" alt="" className="h-5 w-5 cursor-pointer" />
+        <img src="./video.png" alt="" className="h-5 w-5 cursor-pointer" />
+        <img src="./info.png" alt="" className="h-5 w-5 cursor-pointer" />
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ const ConnectedUsers = () => {
         />
         <div className="flex flex-col gap-2">
           <span className="font-semibold">John Doe</span>
-          <p className="text-sm">message</p>
+          <p className="text-sm text-gray-400">message</p>
         </div>
       </div>
       <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
@@ -28,7 +28,7 @@ const ConnectedUsers = () => {
         />
         <div className="flex flex-col gap-2">
           <span className="font-semibold">John Doe</span>
-          <p className="text-sm">message</p>
+          <p className="text-sm text-gray-400">message</p>
         </div>
       </div>
       <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
@@ -39,7 +39,7 @@ const ConnectedUsers = () => {
         />
         <div className="flex flex-col gap-2">
           <span className="font-semibold">John Doe</span>
-          <p className="text-sm">message</p>
+          <p className="text-sm text-gray-400">message</p>
         </div>
       </div>
       <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
@@ -50,7 +50,7 @@ const ConnectedUsers = () => {
         />
         <div className="flex flex-col gap-2">
           <span className="font-semibold">John Doe</span>
-          <p className="text-sm">message</p>
+          <p className="text-sm text-gray-400">message</p>
         </div>
       </div>
     </>
