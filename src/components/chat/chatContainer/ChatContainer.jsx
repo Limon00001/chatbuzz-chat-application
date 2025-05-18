@@ -5,8 +5,17 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// External Imports
+import { useEffect, useRef } from 'react';
+
 // ChatContainer Component
 const ChatContainer = () => {
+  const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, []);
+
   return (
     <section className="flex flex-col gap-5 flex-1 p-5 overflow-y-scroll overflow-x-hidden">
       <div className="message">
@@ -101,6 +110,7 @@ const ChatContainer = () => {
           <span className="text-sm">1 min ago</span>
         </div>
       </div>
+      <div ref={messagesEndRef}></div>
     </section>
   );
 };
