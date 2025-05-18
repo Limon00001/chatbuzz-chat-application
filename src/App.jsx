@@ -5,9 +5,20 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// Internal imports
+import Chat from './components/chat/Chat';
+import Detail from './components/detail/Detail';
+import List from './components/list/List';
+
 // App Component
 const App = () => {
-  return <div className="container">App</div>;
+  return (
+    <main className="container flex">
+      <List />
+      <Chat />
+      <Detail />
+    </main>
+  );
 };
 
 // Export

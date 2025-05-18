@@ -5,9 +5,18 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// Internal Imports
+import ChatList from './chatList/ChatList';
+import UserInfo from './userInfo/UserInfo';
+
 // List Component
 const List = () => {
-  return <div>List</div>;
+  return (
+    <section className="flex-1 flex flex-col">
+      <UserInfo />
+      <ChatList />
+    </section>
+  );
 };
 
 // Export
