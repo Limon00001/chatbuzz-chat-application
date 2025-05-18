@@ -5,6 +5,9 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// External Imports
+import { toast } from 'react-toastify';
+
 // Internal Imports
 import InputField from '../input/Input';
 
@@ -13,6 +16,7 @@ const Form = ({ login, previewImage, inputValue, onChange, onImageUpload }) => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    toast.success(login ? 'Login successful!' : 'Sign up successful!');
   };
 
   return (
