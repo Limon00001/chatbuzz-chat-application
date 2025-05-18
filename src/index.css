@@ -53,4 +53,14 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
+  .message {
+    @apply flex gap-5 max-w-[70%];
+    &.own {
+      @apply self-end;
+      .ownText {
+        @apply bg-blue-500 text-white;
+      }
+    }
+  }
 }
