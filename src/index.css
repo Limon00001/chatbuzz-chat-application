@@ -13,8 +13,8 @@
 
 /* Global CSS */
 * {
-  margin: 0;
-  padding: 0;
+  /* margin: 0;
+  padding: 0; */
   box-sizing: border-box;
   font-family: 'Outfit', sans-serif;
   scroll-behavior: smooth;
@@ -26,12 +26,31 @@
 
 @layer base {
   body {
-    @apply bg-[url('/bg.jpeg')] bg-cover bg-no-repeat flex justify-center items-center h-screen text-white;
+    @apply bg-[url('/bg.jpeg')] bg-cover bg-no-repeat flex justify-center items-center h-screen text-white m-0 p-0;
   }
 }
 
 @layer utilities {
   .container {
     @apply w-[90vw] h-[90vh] bg-black/60 border border-white/10 rounded-xl backdrop-blur-md;
+  }
+
+  ::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 }
