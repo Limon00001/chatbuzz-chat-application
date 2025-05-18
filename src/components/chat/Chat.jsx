@@ -6,17 +6,18 @@
  */
 
 // Internal imports
+import ChatContainer from './chatContainer/ChatContainer';
 import ChatHeader from './chatHeader/ChatHeader';
 import MessageInput from './messageInput/MessageInput';
 
 // Chat Component
 const Chat = () => {
   return (
-    <section className="flex-2 border-r border-r-gray-700 border-l border-l-gray-700 h-[100%]">
+    <section className="flex flex-col flex-2 border-r border-r-gray-700 border-l border-l-gray-700 h-[100%]">
       {/* Chat Header */}
       <ChatHeader />
       {/* Chat Messages */}
-      <div></div>
+      <ChatContainer />
       {/* Message Input */}
       <MessageInput />
     </section>
