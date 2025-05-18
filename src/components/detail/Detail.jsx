@@ -7,7 +7,7 @@
 
 // Detail Component
 const Detail = () => {
-  return <div>Detail</div>;
+  return <section className="flex-1">Detail</section>;
 };
 
 // Export

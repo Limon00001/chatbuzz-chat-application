@@ -7,7 +7,11 @@
 
 // Chat Component
 const Chat = () => {
-  return <div>Chat</div>;
+  return (
+    <section className="flex-2 border-r border-r-gray-700 border-l border-l-gray-700">
+      Chat
+    </section>
+  );
 };
 
 // Export
