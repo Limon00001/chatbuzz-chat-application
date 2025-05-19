@@ -14,7 +14,7 @@ import Notification from './components/notification/Notification';
 
 // App Component
 const App = () => {
-  const user = true;
+  const user = false;
 
   return (
     <main className="container flex overflow-hidden">

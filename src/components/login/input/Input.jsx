@@ -13,6 +13,7 @@ import { useState } from 'react';
 const InputField = ({
   label,
   type = 'text',
+  loading = false,
   name = '',
   placeholder = '',
   value,
@@ -30,6 +31,7 @@ const InputField = ({
         <input
           type={inputType}
           className="w-full px-4 py-2 border border-white/30 bg-white/20 text-white placeholder-white/70 rounded-lg focus:outline-none"
+          disabled={loading}
           name={name}
           placeholder={placeholder}
           value={value}

@@ -5,22 +5,21 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
-// External Imports
-import { toast } from 'react-toastify';
-
 // Internal Imports
 import InputField from '../input/Input';
 
 // Form Component
-const Form = ({ login, previewImage, inputValue, onChange, onImageUpload }) => {
-  // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    toast.success(login ? 'Login successful!' : 'Sign up successful!');
-  };
-
+const Form = ({
+  login,
+  loading,
+  previewImage,
+  inputValue,
+  onChange,
+  onImageUpload,
+  onSubmit,
+}) => {
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
+    <form className="space-y-5" onSubmit={onSubmit}>
       {/* Image Upload Section */}
       {login ? null : (
         <div className="flex items-center space-x-5">
@@ -55,6 +54,7 @@ const Form = ({ login, previewImage, inputValue, onChange, onImageUpload }) => {
           label="Username"
           type="text"
           name="username"
+          loading={loading}
           placeholder="Enter your username"
           value={inputValue.username}
           onChange={onChange}
@@ -65,6 +65,7 @@ const Form = ({ login, previewImage, inputValue, onChange, onImageUpload }) => {
         label="Email"
         type="email"
         name="email"
+        loading={loading}
         placeholder="you@example.com"
         value={inputValue.email}
         onChange={onChange}
@@ -74,15 +75,44 @@ const Form = ({ login, previewImage, inputValue, onChange, onImageUpload }) => {
         label="Password"
         type="password"
         name="password"
+        loading={loading}
         placeholder="••••••••"
         value={inputValue.password}
         onChange={onChange}
       />
       <button
         type="submit"
-        className="w-full mt-6 bg-teal-700 text-white py-3 px-4 rounded-lg hover:bg-teal-600 active:scale-[0.98] transform transition-all duration-200 font-semibold border-none flex items-center justify-center gap-2 cursor-pointer"
+        disabled={loading}
+        className={`w-full mt-6 bg-teal-700 text-white py-3 px-4 rounded-lg hover:bg-teal-600 active:scale-[0.98] transform transition-all duration-200 font-semibold border-none flex items-center justify-center gap-2 cursor-pointer ${
+          loading ? 'opacity-70 cursor-not-allowed' : ''
+        }`}
       >
-        <span>{login ? 'Login' : 'Sign Up'}</span>
+        {loading ? (
+          <>
+            {/* <Loader className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" /> */}
+            <svg
+              width="800px"
+              height="800px"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              class="hds-flight-icon--animation-loading"
+              className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+            >
+              <g fill="#fff" fill-rule="evenodd" clip-rule="evenodd">
+                <path
+                  d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8z"
+                  opacity=".2"
+                />
+
+                <path d="M7.25.75A.75.75 0 018 0a8 8 0 018 8 .75.75 0 01-1.5 0A6.5 6.5 0 008 1.5a.75.75 0 01-.75-.75z" />
+              </g>
+            </svg>
+            <span>{login ? 'Logging in...' : 'Signing up...'}</span>
+          </>
+        ) : (
+          <span>{login ? 'Login' : 'Sign Up'}</span>
+        )}
       </button>
     </form>
   );
