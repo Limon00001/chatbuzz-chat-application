@@ -5,13 +5,22 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// External Imports
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+
+// Internal Imports
+import { auth, db } from '../../lib/firebase';
+import upload from '../../lib/upload';
 import Banner from './banner/Banner';
 import Form from './form/Form';
 
 // Login Component
 const Login = () => {
   const [login, setLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState({
     username: '',
     email: '',
@@ -43,6 +52,80 @@ const Login = () => {
     }
   };
 
+  // Form Submission
+  const handleRegister = async (e) => {
+    e.preventDefault();
+
+    if (login) return;
+
+    const { username, email, password } = inputValue;
+
+    // Validate inputs
+    if (!email || !password || !username) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Create authentication user
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password,
+      );
+
+      let profileImageUrl = null;
+
+      // Upload image if provided
+      if (previewImage.file) {
+        try {
+          profileImageUrl = await upload(previewImage.file);
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          toast.error('Error uploading profile image');
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      // Create user document in Firestore
+      await setDoc(doc(db, 'users', userCredential.user.uid), {
+        username,
+        email,
+        id: userCredential.user.uid,
+        profileImage: profileImageUrl, // image URL
+        createdAt: new Date().toISOString(),
+        blocked: [],
+      });
+
+      // Create user chats document
+      await setDoc(doc(db, 'userchats', userCredential.user.uid), {
+        chats: [],
+      });
+
+      toast.success('Registration successful! Please log in.');
+
+      // Reset form
+      setInputValue({
+        username: '',
+        email: '',
+        password: '',
+      });
+      setPreviewImage({
+        file: null,
+        url: null,
+      });
+
+      // Switch to login mode
+      setLogin(true);
+    } catch (error) {
+      console.error('Error during registration:', error);
+      toast.error(error.message || 'Registration failed');
+    }
+  };
+
   return (
     <section className="w-[100%] h-[100%] flex items-center justify-center gap-25">
       {/* Left Section */}
@@ -59,10 +142,12 @@ const Login = () => {
           </h2>
           <Form
             login={login}
+            loading={loading}
             previewImage={previewImage}
             inputValue={inputValue}
             onChange={handleChange}
             onImageUpload={handleImageUpload}
+            onSubmit={handleRegister}
           />
           <p className="text-sm text-center mt-6 text-white/90">
             Don't have an account?{' '}
