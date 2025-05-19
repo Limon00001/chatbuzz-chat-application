@@ -5,13 +5,8 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
-// External Imports
-import { useState } from 'react';
-
 // SearchToolbar Component
-const SearchToolbar = () => {
-  const [addMode, setAddMode] = useState(false);
-
+const SearchToolbar = ({ addMode, onAddMode }) => {
   return (
     <div className="flex items-center p-5 gap-5">
       <div className="flex-1 flex items-center gap-5 bg-black/50 rounded-xl p-2">
@@ -26,7 +21,7 @@ const SearchToolbar = () => {
         src={addMode ? './minus.png' : './plus.png'}
         alt="add user"
         className="h-9 w-9 cursor-pointer bg-black/50 p-[10px] rounded-xl"
-        onClick={() => setAddMode((prev) => !prev)}
+        onClick={() => onAddMode((prev) => !prev)}
       />
     </div>
   );
