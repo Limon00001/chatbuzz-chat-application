@@ -17,7 +17,7 @@ const App = () => {
   const user = true;
 
   return (
-    <main className="container flex overflow-x-hidden">
+    <main className="container flex overflow-hidden">
       {user ? (
         <>
           <List />
