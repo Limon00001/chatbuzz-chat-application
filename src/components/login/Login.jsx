@@ -143,7 +143,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       toast.success('Login successful!');
     } catch (error) {
       console.error('Error during login:', error);

@@ -5,20 +5,41 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// External imports
+import { onAuthStateChanged } from 'firebase/auth';
+import { useEffect } from 'react';
+
 // Internal imports
 import Chat from './components/chat/Chat';
 import Detail from './components/detail/Detail';
 import List from './components/list/List';
+import Loading from './components/Loading';
 import Login from './components/login/Login';
 import Notification from './components/notification/Notification';
+import { auth } from './lib/firebase';
+import { useUserStore } from './lib/userStore';
 
 // App Component
 const App = () => {
-  const user = false;
+  const { currentUser, isLoading, fetchUserInfo } = useUserStore();
+
+  useEffect(() => {
+    const unSub = onAuthStateChanged(auth, (user) => {
+      fetchUserInfo(user.uid);
+    });
+
+    return () => {
+      unSub();
+    };
+  }, [fetchUserInfo]);
+
+  if (isLoading && auth.currentUser) {
+    return <Loading fullScreen />;
+  }
 
   return (
     <main className="container flex overflow-hidden">
-      {user ? (
+      {currentUser ? (
         <>
           <List />
           <Chat />
