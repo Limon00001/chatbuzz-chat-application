@@ -5,54 +5,64 @@
  * @copyright 2025 monayem_hossain_limon
  */
 
+// External Imports
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+
+// Internal Imports
+import { db } from '../../../../lib/firebase';
+import { useUserStore } from '../../../../lib/userStore';
+
 // ConnectedUsers Component
 const ConnectedUsers = () => {
+  const [chats, setChats] = useState([]);
+
+  const { currentUser } = useUserStore();
+
+  useEffect(() => {
+    const unSub = onSnapshot(
+      doc(db, 'userchats', currentUser.id),
+      async (res) => {
+        const items = res.data().chats;
+
+        const promises = items.map(async (item) => {
+          const userDocRef = doc(db, 'users', item.recieverId);
+          const userDocSnap = await getDoc(userDocRef);
+
+          const user = userDocSnap.data();
+
+          return {
+            ...item,
+            user,
+          };
+        });
+        const chatData = await Promise.all(promises);
+
+        setChats(chatData.sort((a, b) => b.updatedAt - a.updatedAt));
+      },
+    );
+
+    return () => {
+      unSub();
+    };
+  }, [currentUser.id]);
+
   return (
     <>
-      <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
-        <img
-          src="./avatar.png"
-          alt=""
-          className="h-13 w-13 rounded-full object-cover"
-        />
-        <div className="flex flex-col gap-2">
-          <span className="font-semibold">John Doe</span>
-          <p className="text-sm text-gray-400">message</p>
+      {chats.map((chat) => (
+        <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
+          <img
+            src={chat.user.profileImage || './profile.png'}
+            alt=""
+            className="h-12 w-12 rounded-full object-cover"
+          />
+
+          <div key={chat.chatId} className="flex flex-col gap-2">
+            <span className="font-semibold">{chat.user.username}</span>
+            <p className="text-sm text-gray-400">{chat.lastMessage}</p>
+          </div>
         </div>
-      </div>
-      <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
-        <img
-          src="./avatar.png"
-          alt=""
-          className="h-13 w-13 rounded-full object-cover"
-        />
-        <div className="flex flex-col gap-2">
-          <span className="font-semibold">John Doe</span>
-          <p className="text-sm text-gray-400">message</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
-        <img
-          src="./avatar.png"
-          alt=""
-          className="h-13 w-13 rounded-full object-cover"
-        />
-        <div className="flex flex-col gap-2">
-          <span className="font-semibold">John Doe</span>
-          <p className="text-sm text-gray-400">message</p>
-        </div>
-      </div>
-      <div className="flex items-center gap-5 p-5 cursor-pointer border-b border-b-gray-700">
-        <img
-          src="./avatar.png"
-          alt=""
-          className="h-13 w-13 rounded-full object-cover"
-        />
-        <div className="flex flex-col gap-2">
-          <span className="font-semibold">John Doe</span>
-          <p className="text-sm text-gray-400">message</p>
-        </div>
-      </div>
+      ))}
     </>
   );
 };
