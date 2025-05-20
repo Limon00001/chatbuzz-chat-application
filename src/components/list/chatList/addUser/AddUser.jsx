@@ -6,12 +6,22 @@
  */
 
 // External Imports
-import { collection, getDocs } from 'firebase/firestore';
+import {
+  arrayUnion,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  serverTimestamp,
+  setDoc,
+  updateDoc,
+} from 'firebase/firestore';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 
 // Internal Imports
 import { db } from '../../../../lib/firebase';
+import { useUserStore } from '../../../../lib/userStore';
 
 // User Modal Component
 const AddUser = ({ addMode, onAddMode }) => {
@@ -22,6 +32,7 @@ const AddUser = ({ addMode, onAddMode }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const popupRef = useRef(null);
+  const { currentUser } = useUserStore();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -91,6 +102,88 @@ const AddUser = ({ addMode, onAddMode }) => {
       console.error('Search error:', error);
       toast.error(error.message || 'Failed to search for user');
       setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Handle add user
+  const handleAdd = async () => {
+    if (!user || !currentUser) {
+      toast.error('Something went wrong');
+      return;
+    }
+
+    // Check if chat already exists
+    try {
+      const userChatsDoc = await getDoc(doc(db, 'userchats', currentUser.id));
+      const existingChats = userChatsDoc.data()?.chats || [];
+
+      const chatExists = existingChats.some(
+        (chat) => chat.recieverId === user.id,
+      );
+      if (chatExists) {
+        toast.error('Chat already exists with this user');
+        onAddMode(false);
+        return;
+      }
+
+      setLoading(true);
+
+      // Create new chat document
+      const chatRef = collection(db, 'chats');
+      const newChatRef = doc(chatRef);
+
+      // Initialize chat document
+      await setDoc(newChatRef, {
+        messages: [],
+        participants: [currentUser.id, user.id],
+        createdAt: serverTimestamp(),
+      });
+
+      // Initialize or update userchats for both users
+      const userChatsRef = collection(db, 'userchats');
+
+      // Create userchats document if it doesn't exist
+      const initUserChat = async (userId) => {
+        const userChatDoc = doc(userChatsRef, userId);
+        const docSnap = await getDoc(userChatDoc);
+
+        if (!docSnap.exists()) {
+          await setDoc(userChatDoc, { chats: [] });
+        }
+      };
+
+      // Initialize chat documents for both users
+      await Promise.all([initUserChat(currentUser.id), initUserChat(user.id)]);
+
+      // Update both users' chat lists
+      await Promise.all([
+        updateDoc(doc(userChatsRef, user.id), {
+          chats: arrayUnion({
+            recieverId: currentUser.id,
+            chatId: newChatRef.id,
+            lastMessage: '',
+            updatedAt: Date.now(),
+          }),
+        }),
+        updateDoc(doc(userChatsRef, currentUser.id), {
+          chats: arrayUnion({
+            recieverId: user.id,
+            chatId: newChatRef.id,
+            lastMessage: '',
+            updatedAt: Date.now(),
+          }),
+        }),
+      ]);
+
+      toast.success('User added successfully');
+      setInputValue({ name: '' }); // Reset search input
+      setUser(null); // Reset selected user
+      onAddMode(false);
+    } catch (error) {
+      console.error('Error adding user:', error);
+      toast.error(error.message || 'Failed to add user');
     } finally {
       setLoading(false);
     }
@@ -169,7 +262,10 @@ const AddUser = ({ addMode, onAddMode }) => {
                 />
                 <span>{user.username}</span>
               </div>
-              <button className="text-white bg-black py-1 px-4 rounded-lg border-none cursor-pointer">
+              <button
+                onClick={handleAdd}
+                className="text-white bg-black py-1 px-4 rounded-lg border-none cursor-pointer"
+              >
                 Add User
               </button>
             </div>
