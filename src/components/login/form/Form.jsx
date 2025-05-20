@@ -84,7 +84,7 @@ const Form = ({
         type="submit"
         disabled={loading}
         className={`w-full mt-6 bg-teal-700 text-white py-3 px-4 rounded-lg hover:bg-teal-600 active:scale-[0.98] transform transition-all duration-200 font-semibold border-none flex items-center justify-center gap-2 cursor-pointer ${
-          loading ? 'opacity-70 cursor-not-allowed' : ''
+          loading ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''
         }`}
       >
         {loading ? (

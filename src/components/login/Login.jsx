@@ -6,7 +6,10 @@
  */
 
 // External Imports
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -52,7 +55,7 @@ const Login = () => {
     }
   };
 
-  // Form Submission
+  // Handle Registration
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -126,6 +129,30 @@ const Login = () => {
     }
   };
 
+  // Handle login
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    // Validate inputs
+    const { email, password } = inputValue;
+    if (!email || !password) {
+      toast.error('Please fill in all required fields');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await signInWithEmailAndPassword(email, password);
+      toast.success('Login successful!');
+    } catch (error) {
+      console.error('Error during login:', error);
+      toast.error(error.message || 'Login failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="w-[100%] h-[100%] flex items-center justify-center gap-25">
       {/* Left Section */}
@@ -147,7 +174,7 @@ const Login = () => {
             inputValue={inputValue}
             onChange={handleChange}
             onImageUpload={handleImageUpload}
-            onSubmit={handleRegister}
+            onSubmit={login ? handleLogin : handleRegister}
           />
           <p className="text-sm text-center mt-6 text-white/90">
             Don't have an account?{' '}
