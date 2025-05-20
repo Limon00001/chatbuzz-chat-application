@@ -8,10 +8,16 @@
 // External Imports
 import { useEffect, useRef, useState } from 'react';
 
+// Internal Imports
+import { auth } from '../../../lib/firebase';
+import { useUserStore } from '../../../lib/userStore';
+
 // UserInfo Component
 const UserInfo = () => {
   const [isOpen, setIsOpen] = useState(false);
   const popupRef = useRef(null);
+
+  const { currentUser } = useUserStore();
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -28,11 +34,11 @@ const UserInfo = () => {
     <div className="relative flex justify-between items-center p-5">
       <div className="flex items-center gap-5">
         <img
-          src="./avatar.png"
+          src={currentUser?.profileImage || './profile.png'}
           alt=""
           className="w-10 h-10 rounded-full object-cover"
         />
-        <h2>John Doe</h2>
+        <h2>{currentUser?.username}</h2>
       </div>
       <div className="flex gap-5">
         <img
@@ -49,11 +55,16 @@ const UserInfo = () => {
           ref={popupRef}
           className="absolute top-16 right-2 w-30 p-2 bg-teal-600/50 backdrop-blur-md rounded-lg shadow-lg z-50"
         >
-          <p className="cursor-pointer text-sm font-normal tracking-wider">
+          <button className="cursor-pointer text-sm font-normal tracking-wider">
             Edit Profile
-          </p>
+          </button>
           <hr className="my-2 text-gray-400" />
-          <p className="cursor-pointer text-sm font-normal">Logout</p>
+          <button
+            onClick={() => auth.signOut()}
+            className="cursor-pointer text-sm font-normal"
+          >
+            Logout
+          </button>
         </div>
       )}
     </div>
