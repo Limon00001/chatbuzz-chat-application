@@ -16,15 +16,30 @@ import SearchToolbar from './searchToolbar/SearchToolbar';
 // ChatList Component
 const ChatList = () => {
   // State
+  const [chats, setChats] = useState([]);
   const [addMode, setAddMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredChats = chats.filter((chat) => {
+    if (!searchTerm.trim()) return true; // Show all chats when no search term
+
+    return chat?.user?.username // Changed from name to username
+      ?.toLowerCase()
+      ?.includes(searchTerm.toLowerCase());
+  });
 
   return (
     <div className="flex-1 overflow-y-scroll">
       {/* Search Toolbar */}
-      <SearchToolbar addMode={addMode} onAddMode={setAddMode} />
+      <SearchToolbar
+        addMode={addMode}
+        onAddMode={setAddMode}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+      />
 
       {/* Connected Users */}
-      <ConnectedUsers />
+      <ConnectedUsers chats={filteredChats} setChats={setChats} />
 
       {/* User Modal */}
       {
