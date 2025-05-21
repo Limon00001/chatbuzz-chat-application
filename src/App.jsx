@@ -16,16 +16,18 @@ import List from './components/list/List';
 import Loading from './components/Loading';
 import Login from './components/login/Login';
 import Notification from './components/notification/Notification';
+import { useChatStore } from './lib/chatStore';
 import { auth } from './lib/firebase';
 import { useUserStore } from './lib/userStore';
 
 // App Component
 const App = () => {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
+  const { chatId } = useChatStore();
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
-      fetchUserInfo(user.uid);
+      fetchUserInfo(user?.uid);
     });
 
     return () => {
@@ -42,8 +44,8 @@ const App = () => {
       {currentUser ? (
         <>
           <List />
-          <Chat />
-          <Detail />
+          {chatId && <Chat />}
+          {chatId && <Detail />}
         </>
       ) : (
         <Login />

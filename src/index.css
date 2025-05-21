@@ -59,7 +59,7 @@
     &.own {
       @apply self-end;
       .ownText {
-        @apply bg-blue-500 text-white;
+        @apply bg-teal-500/70 text-white;
       }
     }
   }
