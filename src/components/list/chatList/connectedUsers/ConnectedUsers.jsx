@@ -7,7 +7,7 @@
 
 // External Imports
 import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 // Internal Imports
 import { useChatStore } from '../../../../lib/chatStore';
@@ -15,9 +15,7 @@ import { db } from '../../../../lib/firebase';
 import { useUserStore } from '../../../../lib/userStore';
 
 // ConnectedUsers Component
-const ConnectedUsers = () => {
-  const [chats, setChats] = useState([]);
-
+const ConnectedUsers = ({ chats, setChats }) => {
   const { currentUser } = useUserStore();
   const { changeChat } = useChatStore();
 
@@ -84,13 +82,21 @@ const ConnectedUsers = () => {
           onClick={() => handleSelect(chat)}
         >
           <img
-            src={chat?.user?.profileImage || './profile.png'}
+            src={
+              chat?.user?.blocked?.includes(currentUser.id)
+                ? './profile.png'
+                : chat?.user?.profileImage || './profile.png'
+            }
             alt=""
             className="h-12 w-12 rounded-full object-cover"
           />
 
           <div key={chat.chatId} className="flex flex-col gap-2">
-            <span className="font-semibold">{chat?.user?.username}</span>
+            <span className="font-semibold">
+              {chat?.user?.blocked?.includes(currentUser.id)
+                ? 'User'
+                : chat?.user?.username}
+            </span>
             <p className="text-sm text-gray-400">{chat?.lastMessage}</p>
           </div>
         </div>
