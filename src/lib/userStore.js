@@ -37,6 +37,15 @@ const useUserStore = create((set) => ({
       set({ isLoading: false });
     }
   },
+
+  updateProfile: (updates) => {
+    set((state) => ({
+      currentUser: {
+        ...state.currentUser,
+        ...updates,
+      },
+    }));
+  },
 }));
 
 // Export

@@ -10,10 +10,10 @@ import ChatList from './chatList/ChatList';
 import UserInfo from './userInfo/UserInfo';
 
 // List Component
-const List = () => {
+const List = ({ onProfileClick }) => {
   return (
     <section className="flex-1 flex flex-col">
-      <UserInfo />
+      <UserInfo onProfileClick={onProfileClick} />
       <ChatList />
     </section>
   );

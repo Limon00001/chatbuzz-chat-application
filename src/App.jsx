@@ -7,7 +7,7 @@
 
 // External imports
 import { onAuthStateChanged } from 'firebase/auth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // Internal imports
 import Chat from './components/chat/Chat';
@@ -16,6 +16,7 @@ import List from './components/list/List';
 import Loading from './components/Loading';
 import Login from './components/login/Login';
 import Notification from './components/notification/Notification';
+import Profile from './components/profile/Profile';
 import { useChatStore } from './lib/chatStore';
 import { auth } from './lib/firebase';
 import { useUserStore } from './lib/userStore';
@@ -24,6 +25,7 @@ import { useUserStore } from './lib/userStore';
 const App = () => {
   const { currentUser, isLoading, fetchUserInfo } = useUserStore();
   const { chatId, showDetail } = useChatStore();
+  const [showProfile, setShowProfile] = useState(false);
 
   useEffect(() => {
     const unSub = onAuthStateChanged(auth, (user) => {
@@ -42,11 +44,15 @@ const App = () => {
   return (
     <main className="container flex overflow-hidden">
       {currentUser ? (
-        <>
-          <List />
-          {chatId && <Chat />}
-          {chatId && showDetail && <Detail />}
-        </>
+        showProfile ? (
+          <Profile onBack={() => setShowProfile(false)} />
+        ) : (
+          <>
+            <List onProfileClick={() => setShowProfile(true)} />
+            {chatId && <Chat />}
+            {chatId && showDetail && <Detail />}
+          </>
+        )
       ) : (
         <Login />
       )}
