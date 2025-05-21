@@ -63,4 +63,33 @@
       }
     }
   }
+
+  /* Add to your existing CSS */
+  .message-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-width: 60%;
+  }
+
+  .image-container {
+    position: relative;
+    width: fit-content;
+  }
+
+  .image-container img {
+    transition: transform 0.2s;
+  }
+
+  .image-container img:hover {
+    transform: scale(1.02);
+  }
+
+  .message.own .message-content {
+    align-items: flex-end;
+  }
+
+  .preview {
+    opacity: 0.7;
+  }
 }
