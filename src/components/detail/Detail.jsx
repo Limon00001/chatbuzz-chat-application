@@ -48,6 +48,13 @@ const Detail = () => {
         <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
       </div>
       <div className="flex flex-col gap-8 p-5 mt-auto">
+        <p className="text-center text-red-500">
+          {isCurrentUserBlocked
+            ? 'This user has blocked you!'
+            : isRecieverBlocked
+            ? 'You have blocked this user!'
+            : ''}
+        </p>
         <button
           onClick={handleBlock}
           className={`w-full bg-red-600/80 hover:bg-red-600/60 py-2 px-4 border-none rounded-full transition-colors duration-300 ease-in-out cursor-pointer ${
@@ -57,10 +64,10 @@ const Detail = () => {
           }`}
         >
           {isCurrentUserBlocked
-            ? 'You are Blocked!'
+            ? 'Unblock'
             : isRecieverBlocked
-            ? 'User is Blocked!'
-            : 'Block User'}
+            ? 'Block'
+            : 'Unblock'}
         </button>
       </div>
     </section>
