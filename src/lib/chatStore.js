@@ -11,14 +11,14 @@ import { create } from 'zustand';
 // Internal Imports
 import { useUserStore } from './userStore';
 
-// Internal Imports
-
 // User Store
 const useChatStore = create((set) => ({
   chatId: null,
   user: null,
   isCurrentUserBlocked: false,
   isRecieverBlocked: false,
+  showDetail: true,
+
   changeChat: (chatId, user) => {
     const currentUser = useUserStore.getState().currentUser;
 
@@ -45,6 +45,8 @@ const useChatStore = create((set) => ({
       });
     }
   },
+
+  toggleDetail: () => set((state) => ({ showDetail: !state.showDetail })),
 
   changeBlock: () => {
     set((state) => ({ ...state, isRecieverBlocked: !state.isRecieverBlocked }));
