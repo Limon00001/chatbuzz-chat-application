@@ -7,7 +7,14 @@
 
 // External Imports
 import EmojiPicker from 'emoji-picker-react';
+import { arrayUnion, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
+
+// Internal Imports
+import { useChatStore } from '../../../lib/chatStore';
+import { db } from '../../../lib/firebase';
+import { useUserStore } from '../../../lib/userStore';
 
 // MessageInput Component
 const MessageInput = () => {
@@ -15,6 +22,9 @@ const MessageInput = () => {
   const [message, setMessage] = useState({
     message: '',
   });
+
+  const { chatId, user } = useChatStore();
+  const { currentUser } = useUserStore();
 
   const handleMessage = (e) => {
     e.preventDefault();
@@ -31,6 +41,48 @@ const MessageInput = () => {
       message: prev.message + emoji.emoji,
     }));
     setIsOpenEmoji(false);
+  };
+
+  const handleSend = async () => {
+    if (!message.message.length > 0 && message.message === ' ') return;
+
+    try {
+      await updateDoc(doc(db, 'chats', chatId), {
+        messages: arrayUnion({
+          senderId: currentUser.id,
+          message: message.message,
+          timestamp: new Date(),
+        }),
+      });
+
+      const userIDs = [currentUser.id, user.id];
+
+      userIDs.forEach(async (id) => {
+        const userChatsRef = await doc(db, 'userchats', id);
+        const userChatsSnapshot = await getDoc(userChatsRef);
+
+        if (userChatsSnapshot.exists()) {
+          const userChatsData = userChatsSnapshot.data();
+
+          const chatIndex = userChatsData.chats.findIndex(
+            (chat) => chat.chatId === chatId,
+          );
+
+          userChatsData.chats[chatIndex].lastMessage = message.message;
+          userChatsData.chats[chatIndex].isSeen =
+            id === currentUser.id ? true : false;
+          userChatsData.chats[chatIndex].updatedAt = Date.now();
+
+          await updateDoc(userChatsRef, {
+            chats: userChatsData.chats,
+          });
+        }
+      });
+    } catch (error) {
+      toast.error(error.message || 'Failed to send message');
+    } finally {
+      setMessage({ message: '' });
+    }
   };
 
   return (
@@ -72,8 +124,8 @@ const MessageInput = () => {
         </div>
       </div>
       <button
-        type="submit"
         className="bg-[#3F7670] text-white p-[10px_20px] rounded-md cursor-pointer"
+        onClick={handleSend}
       >
         Send
       </button>
