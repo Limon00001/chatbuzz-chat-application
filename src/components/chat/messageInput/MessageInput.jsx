@@ -135,13 +135,7 @@ const MessageInput = ({ img, setImg }) => {
           className="hidden"
         />
       </div>
-      <textarea
-        rows={1}
-        cols={1}
-        maxLength={100}
-        minLength={1}
-        autoFocus
-        autoComplete="off"
+      <input
         name="message"
         id="message"
         type="text"
